@@ -21,16 +21,59 @@ Mac OS users must use the Darwin binary.
 On Linux and Mac OS X, run:
 
 ```shell
-GBOX_UPSTREAM='https://countries.trevorblades.com/'
+GBOX_UPSTREAM='graphql_url_endpoint'
 ./gbox run -config ./Caddyfile.dist
 ```
 
 On Windows, start PowerShell and run:
 
 ```shell
-$env:GBOX_UPSTREAM='https://countries.trevorblades.com/'; .\gbox.exe run Caddyfile.dist
+$env:GBOX_UPSTREAM='graphql_url_endpoint'; .\gbox.exe run Caddyfile.dist
 ```
 
 :::info
 Remember to change value of GBOX_UPSTREAM env.
 :::
+
+
+Running with Docker
+-------------------
+
+You can also use it within a Docker container. To do that, you'll need to execute something more-or-less like the examples below:
+
+```shell
+docker run \
+    -e GBOX_UPSTREAM='graphql_url_endpoint' \
+    -p 80:80 \
+    -p 443:443 \
+    gboxproxy/gbox
+```
+
+Or you can use Docker compose setting below:
+
+```yaml
+version: '3'
+services:
+  gbox:
+    image: gboxproxy/gbox
+    environment:
+      GBOX_UPSTREAM: 'graphql_url_endpoint'
+    ports:
+      - 80:80
+      - 443:443
+```
+
+Helm chart for Kubernetes
+-------------------------
+
+Use the [Helm package manager](https://helm.sh) to install GBox on a Kubernetes cluster:
+
+To install the chart with the release name my-release, run the following commands:
+
+```shell
+helm repo add gbox https://gbox-proxy.github.io/gbox
+helm upgrade my-release gbox/gbox -i --set upstream='graphql_url_endpoint'
+```
+
+See [the list of available values](https://artifacthub.io/packages/helm/gbox/gbox) for this chart.
+
