@@ -22,7 +22,6 @@ jobs:
         env:
           GIT_USER: "$GITHUB_ACTOR"
           GIT_PASS: "${{ secrets.GITHUB_TOKEN }}"
-        working-directory: docusaurus
         run: |
           git config user.name "$GITHUB_ACTOR"
           git config user.email "$GITHUB_ACTOR@users.noreply.github.com"
