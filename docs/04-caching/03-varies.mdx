@@ -1,0 +1,54 @@
+---
+id: caching-varies
+title: Varies
+sidebar_label: Varies
+image: https://gbox-proxy.github.io/img/gbox-full.png
+slug: /caching/varies
+---
+
+Some types and fields can contain data that is specific to a certain user. Cached query results that contain those types (or fields) should not be returned to any other user.
+
+To handle this scenario, you can define `varies` for GBox which let you scope (hence the name) cached query results to specific headers and/or cookies.
+
+Default the GBox not have any varies, it means with it will return the same cached results for all users.
+
+Declaring varies
+-------------
+
+The GBox use [Caddyfile syntax](https://caddyserver.com/docs/caddyfile/concepts#structure) to declaring varies, you can declare varies based on the header and/or cookie of your users use to authenticate via `GBOX_CACHING_VARIES` environment variable.
+
+Caddy varies directives:
+
+| Name    | Description          |
+|---------|----------------------|
+| headers | List of header names |
+| cookies | List of cookie names |
+
+
+```yaml
+GBOX_CACHING_VARIES: |
+    authenticated { # varies name it can be anything.
+        headers Authorization
+        cookies session_id
+    }
+```
+
+:::note
+Header names are case-insensitive, cookie names are case-sensitive.
+:::
+
+Using varies
+------------
+
+To set varies a certain query result should be cached by, create a cache rule for the types you want to cache separately per-user (see Cache [Rules](./02-rules.mdx) for more information):
+
+```yaml
+GBOX_CACHING_RULES: |
+    users { # varies name it can be anything.
+        max_age 30m
+        swr 30m
+        varies authorization
+    }
+```
+
+Now every query result will be cached with the corresponding cookie and/or header of the `authenticated` varies and will only be returned for the same user. Users that aren't authenticated will still get the same cached results.

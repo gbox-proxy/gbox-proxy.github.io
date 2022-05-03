@@ -1,0 +1,30 @@
+---
+id: caching-type-keys
+title: Type Keys
+sidebar_label: Type Keys
+image: https://gbox-proxy.github.io/img/gbox-full.png
+slug: /caching/type-keys
+---
+
+To know which fields identify individual resources in your schema the GBox needs to know which field holds the unique identifier for a certain node type.
+This is mainly used for invalidate changed results from the cache store, either via automatic cache invalidation or the admin API.
+
+By default, the GBox looks for `id` field on your types. However, sometimes you have other unique fields (like e.g. User.email).
+
+Declaring type keys
+-------------------
+
+The GBox use [Caddyfile syntax](https://caddyserver.com/docs/caddyfile/concepts#structure) to declaring type keys via `GBOX_CACHING_TYPE_KEYS` environment variable.
+
+```yaml
+GBOX_CACHING_TYPE_KEYS: |
+  User email # Directive will be use as a type and next args are field keys.
+```
+
+Now you can invalidate cached query results via admin purging api:
+
+```graphql
+mutation {
+    purgeTypeKey(type: "User", field: "email", key: "cached email")
+}
+```

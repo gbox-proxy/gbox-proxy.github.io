@@ -1,0 +1,66 @@
+---
+id: caching-rules
+title: Rules
+sidebar_label: Rules
+image: https://gbox-proxy.github.io/img/gbox-full.png
+slug: /caching/rules
+---
+
+The GBox gives you fine-grained per-type or even per-field control over your cache behavior for every single query that is sent through upstream GraphQL server with cache rules.
+
+Declaring rules
+---------------
+
+The GBox use [Caddyfile syntax](https://caddyserver.com/docs/caddyfile/concepts#structure) to declaring rules via `GBOX_CACHING_RULES` environment variable.
+
+```yaml
+GBOX_CACHING_RULES: |
+    book { # rule name it can be anything.
+        types {
+          Book
+        }
+        max_age 30m
+        swr 30m
+    }
+```
+
+:::info
+A rule applies to all queries that contain the rule's types or fields. If multiple rules apply to the same query, GBox will use the minimum `max_age`, the minimum `swr`, and combine all `varies` to cache the query result.
+:::
+
+Caddy caching rule directives
+-----------------------------
+
++ [types](#caddy-directive-types): **required**
++ [max_age](#caddy-directive-max-age): **required**
++ [swr](#caddy-directive-swr): optional
++ [varies](#caddy-directive-varies): optional
+
+### types {#caddy-directive-types}
+
+The rule will apply its cache configuration to any query that contains the types or fields mentioned in the types property.
+
+You can target both types as well as specific fields of types:
+
+```text
+types {
+  # The rule will apply to any query that contains Book type
+  Book
+
+  # The rule will apply to any query that contains Book type with author field (Book.author).
+  Book author
+}
+
+```
+
+### max_age {#caddy-directive-max-age}
+
+The `max_age` directive configures how long query results that match the rule types should be cached, in seconds. If multiple rules apply to the same query, the minimum `max_age` will be used for the entire query result.
+
+### swr {#caddy-directive-swr}
+
+The `swr` [stale-while-revalidate](https://web.dev/stale-while-revalidate/) directive configures how long stale query results that match the rule types should be served while fresh data is already being fetched in the background.
+
+### varies {#caddy-directive-varies}
+
+Which `varies` to apply to query results that match the rule types. See [the documentation](./03-varies.mdx) of it for more information.
