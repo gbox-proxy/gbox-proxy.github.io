@@ -43,6 +43,10 @@ const config = {
     ({
       navbar: {
         title: 'GBox Proxy',
+        logo: {
+          alt: 'Logo',
+          src: 'img/gbox.png',
+        },
         items: [
           {
             href: 'https://github.com/gbox-proxy/gbox',
@@ -53,7 +57,11 @@ const config = {
         ],
       },
       footer: {
-        style: 'dark',
+        style: 'light',
+        "logo": {
+          "src": "img/gbox-full.png",
+          "href": "/",
+        },
         copyright: `Copyright © ${new Date().getFullYear()} GBox Proxy. Built with Docusaurus.`,
       },
       prism: {
