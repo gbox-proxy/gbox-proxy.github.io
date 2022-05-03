@@ -1,11 +1,13 @@
 ---
 id: introduction
-title: Introduction
+hide_title: true
 sidebar_label: Introduction
+image: https://gbox-proxy.github.io/img/gbox-full.png
 slug: /
 ---
+<h1 align="center"><img width="220px" src="/img/gbox-full.png" /></h1>
 
-GBox's fast reverse proxy in front of any GraphQL server for caching, securing and monitoring.
+Fast reverse proxy in front of any GraphQL server for caching, securing and monitoring.
 
 Features
 --------

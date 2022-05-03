@@ -1,5 +1,4 @@
-GBox Website
-------------
+<h1 align="center"><a href="https://gbox-proxy.github.io"><img width="220px" src="./static/img/gbox-full.png"></a></h1>
 
 This website is built using [Docusaurus 2](https://docusaurus.io/), a modern static website generator.
 

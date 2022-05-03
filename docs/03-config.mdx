@@ -1,0 +1,67 @@
+---
+id: config
+title: Config
+sidebar_label: Config
+slug: /config
+---
+
+You can config the GBox with environments variables and Caddy directives
+
+Environment variables
+---------------------
+
+| Environment variable                   | Description                                                                                                                                          | Default value                                                                              |
+|----------------------------------------|------------------------------------------------------------------------------------------------------------------------------------------------------|--------------------------------------------------------------------------------------------|
+| GBOX_GLOBAL_DIRECTIVES                 | [Caddy global options](#caddy-global-options)                                                                                                        | ""                                                                                         |
+| GBOX_UPSTREAM                          | Your GraphQL url                                                                                                                                     | ""                                                                                         |
+| GBOX_UPSTREAM_REVERSE_PROXY_DIRECTIVES | [Caddy reverse proxy extra directives](https://caddyserver.com/docs/caddyfile/directives/reverse_proxy)                                              | ""                                                                                         |
+| GBOX_SERVER_NAME                       | Server name (host and port)                                                                                                                          | "localhost"                                                                                |
+| GBOX_FETCH_SCHEMA_INTERVAL             | Interval time to update SDL from upstream, set 0 to disabled this feature.                                                                           | "10m"                                                                                      |
+| GBOX_ENABLED_COMPLEXITY                | Whether enabled filter query complexity or not.                                                                                                      | "true"                                                                                     |
+| GBOX_NODE_COUNT_LIMIT                  | The maximum number of Nodes a query may return. This option only affect when `GBOX_ENABLED_COMPLEXITY` set to "true".                                | "60"                                                                                       |
+| GBOX_MAX_COMPLEXITY                    | The maximum number of Node requests that might be needed to execute the query. This option only affect when `GBOX_ENABLED_COMPLEXITY` set to "true". | "60"                                                                                       |
+| GBOX_MAX_DEPTH                         | The maximum depth per node. This option only affect when `GBOX_ENABLED_COMPLEXITY` set to "true".                                                    | "15"                                                                                       |
+| GBOX_DISABLED_INTROSPECTION            | Whether disabled introspection queries or not.                                                                                                       | "false"                                                                                    |
+| GBOX_DISABLED_PLAYGROUNDS              | Whether disabled playgrounds or not.                                                                                                                 | "false"                                                                                    |
+| GBOX_ENABLED_CACHING                   | Enabled caching query results or not                                                                                                                 | "true"                                                                                     |
+| GBOX_STORE_DSN                         | Caching store DSN, only support Redis or Freecache (memory cache).                                                                                   | "freecache://?cache_size=5368709120"                                                       |
+| GBOX_CACHING_RULES                     | Set of [caching rules](./caching/rules.mdx) to control cache behavior for every single query.                                                        | [See here](./caching/rules.mdx#default-caching-rules                                       |
+| GBOX_CACHING_VARIES                    | Set of [caching varies](./caching/varies.mdx) headers and/or cookies to identifier cached query results.                                             | ""                                                                                         |
+| GBOX_CACHING_TYPE_KEYS                 | [Caching type keys](./caching/type-keys.mdx) use to identifier query results items.                                                                  | If not specific key field for type, by default "id" will be use as key field for all types |
+| GBOX_AUTO_INVALIDATE_CACHE             | Whether [auto invalidate query results](./caching/auto-invalidate.mdx) by mutation results through type keys or not.                                 | "true"                                                                                     |
+| GBOX_CACHING_DEBUG_HEADERS             | Whether add cache debug headers to every responses like tags, cache key or not.                                                                      | "true"                                                                                     |
+| GBOX_ENABLED_ADMIN_AUTH                | Whether enabled basic auth for admin endpoint.                                                                                                       | "false"                                                                                    |
+| GBOX_ADMIN_USERNAME                    | Admin basic auth username. This option only affect when `GBOX_ENABLED_ADMIN_AUTH` set to "true".                                                     | "gbox"                                                                                     |
+| GBOX_ADMIN_PASSWORD                    | Admin basic auth password. This option only affect when `GBOX_ENABLED_ADMIN_AUTH` set to "true".                                                     | "gbox"                                                                                     |
+| GBOX_ENABLED_METRICS                   | Whether enabled [Prometheus](https://prometheus.io/) metrics endpoint.                                                                               | "false"                                                                                    |
+| GBOX_METRICS_PATH                      | Metrics endpoint. This option only affect when `GBOX_ENABLED_METRICS` set to "true".                                                                 | "/metrics"                                                                                 |
+| GBOX_EXTRA_DIRECTIVES                  | [GBox extra directives](#caddy-extra-directives)                                                                                                     | ""                                                                                         |
+
+Caddy directives {#caddy-directives}
+----------------
+
+GBox is a custom build of the Caddy web server including the `http.handlers.gbox` module.
+
+Read [Caddy web server's getting started guide](https://caddyserver.com/docs/getting-started) to learn the basics.
+
+## Caddy global options {#caddy-global-options}
+
+You can add [Caddy global options](https://caddyserver.com/docs/caddyfile/options) through `GBOX_GLOBAL_DIRECTIVES` environment variable.
+
+Example:
+
+```yaml
+GBOX_GLOBAL_DIRECTIVES: |
+  debug
+  admin off
+```
+
+## GBox extra directives {#caddy-extra-directives}
+
+You can add more GBox directives through `GBOX_EXTRA_DIRECTIVES` environment variable, some useful directives you may want to add:
+
+| Directive            | Description                                                           | Example                                                |
+|----------------------|-----------------------------------------------------------------------|--------------------------------------------------------|
+| fetch_schema_header  | Help to add HTTP header when fetch schema through introspection query | fetch_schema_header header_name value                  |
+| cors_origins         | A list of allowed CORS origins                                        | cors_origins https://example1.org https://example2.org |
+| cors_allowed_headers | A list of allowed CORS HTTP headers                                   | cors_allowed_headers Authorization Cache-Control       |
