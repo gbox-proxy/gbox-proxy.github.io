@@ -1,0 +1,154 @@
+---
+id: caching-tagging
+title: Tagging
+sidebar_label: Tagging
+image: https://gbox-proxy.github.io/img/gbox-full.png
+slug: /caching/tagging
+---
+
+The following GraphQL query to [Countries GraphQL API](https://countries.trevorblades.com/) see how this is handled by GBox.
+
+```graphql
+query GetContinents {
+    continents {
+        name
+        code
+    }
+}
+```
+
+The response to the above query would look like the following JSON document:
+
+```json
+{
+  "data": {
+    "continents": [
+      {
+        "name": "Africa",
+        "code": "AF"
+      },
+      {
+        "name": "Antarctica",
+        "code": "AN"
+      },
+      {
+        "name": "Asia",
+        "code": "AS"
+      },
+      {
+        "name": "Europe",
+        "code": "EU"
+      },
+      {
+        "name": "North America",
+        "code": "NA"
+      },
+      {
+        "name": "Oceania",
+        "code": "OC"
+      },
+      {
+        "name": "South America",
+        "code": "SA"
+      }
+    ]
+  }
+}
+```
+
+GBox then takes a look at the response and figure out which types and instances of those types are included. This information informs which tags are added to the response when it is stored in the cache.
+
+Based on the above query, those tags will look like the following:
+
++ `schema:xxxx`: the schema hash.
++ `operation:GetContinents`: the query operation.
++ `type:Query`: the query root type.
++ `type:Continent`: the type (or types) returned by the query.
++ `field:Query:continents`: the root field used.
++ `field:Continent:name`: the Continent field used.
++ `field:Continent:code`: the Continent field used.
+
+## Nested Types
+
+Similarly, if we extend our original query and ask for additional information available in nested types, 
+GBox would add tags for those types as well. Asking for more information about the countries, for example:
+
+```graphql
+query GetContinentCountries {
+  continents(filter: {code: {eq: "AN"}}) {
+    name
+    code
+    countries {
+      name
+    }
+  }
+}
+```
+
+would return response:
+
+```json
+{
+  "data": {
+    "continents": [
+      {
+        "name": "Antarctica",
+        "code": "AN",
+        "countries": [
+          {
+            "name": "Antarctica"
+          },
+          {
+            "name": "Bouvet Island"
+          },
+          {
+            "name": "South Georgia and the South Sandwich Islands"
+          },
+          {
+            "name": "Heard Island and McDonald Islands"
+          },
+          {
+            "name": "French Southern Territories"
+          }
+        ]
+      }
+    ]
+  }
+}
+```
+
+GBox tagged response above with the following tags:
+
++ schema:xxxx
++ operation:GetContinents
++ type:Query
++ type:Continent
++ type:Country
++ field:Query:continents
++ field:Continent:name
++ field:Continent:code
++ field:Continent:countries
++ field:Country:name
+
+## Key Fields
+
+If you have additional key fields defined for your types, GBox tags documents with tags referencing those additional key fields as well.
+
+For example, if field `code` of the `Continent` type above that uniquely identifies a single continent, you could add this field to your list of key fields. Any query that fetches an entity of type Continent and also requests the code key field is then also tagged with:
+
++ schema:xxxx
++ operation:GetContinents
++ type:Query
++ type:Continent
++ field:Query:continents
++ field:Continent:name
++ field:Continent:code
++ key:Continent:code:AN
+
+By default, GBox treat `id` field on your types as key field and tags responses with those.
+You can however configure this according to your requirements.
+
+## Debug headers
+
+If you want to see how many tags were tagged on query results, set `GBOX_CACHING_DEBUG_HEADERS` env value to `"true"`
+you will see information about tags of query result in response headers.
