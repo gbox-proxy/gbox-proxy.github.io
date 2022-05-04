@@ -26,5 +26,11 @@ Features
     + Operations count.
     + Operations request durations.
     + Operations caching statuses.
-  
+
+How it works
+------------
+
+Every single request sent by your clients will serve by GBox. The GBox reverse proxy will cache, validate, and collect metrics before pass through requests to your GraphQL server.
+
+![Diagram](./assets/diagram.png)
 
