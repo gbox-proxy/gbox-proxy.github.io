@@ -2,10 +2,11 @@
 id: config
 title: Config
 sidebar_label: Config
+image: https://gbox-proxy.github.io/img/gbox-full.png
 slug: /config
 ---
 
-You can config the GBox with environments variables.
+You can config the GBox via environments variables.
 
 Environment variables
 ---------------------
@@ -25,10 +26,10 @@ Environment variables
 | GBOX_DISABLED_PLAYGROUNDS              | Whether disabled playgrounds or not.                                                                                                                 | "false"                                                                                    |
 | GBOX_ENABLED_CACHING                   | Enabled caching query results or not                                                                                                                 | "true"                                                                                     |
 | GBOX_STORE_DSN                         | Caching store DSN, only support Redis or Freecache (memory cache).                                                                                   | "freecache://?cache_size=5368709120"                                                       |
-| GBOX_CACHING_RULES                     | Set of [caching rules](./04-caching/02-rules.mdx) to control cache behavior for every single query.                                                  | [See here](./caching/rules.mdx#default-caching-rules                                       |
-| GBOX_CACHING_VARIES                    | Set of [caching varies](./04-caching/03-varies.mdx) headers and/or cookies to identifier cached query results.                                       | ""                                                                                         |
-| GBOX_CACHING_TYPE_KEYS                 | [Caching type keys](./04-caching/04-type-keys.mdx) use to identifier query results items.                                                            | If not specific key field for type, by default "id" will be use as key field for all types |
-| GBOX_AUTO_INVALIDATE_CACHE             | Whether [auto invalidate query results](#) by mutation results through type keys or not.                                                             | "true"                                                                                     |
+| GBOX_CACHING_RULES                     | Set of [caching rules](./04-caching/concepts/01-rules.mdx) to control cache behavior for every single query.                                         | [See here](./caching/rules.mdx#default-caching-rules                                       |
+| GBOX_CACHING_VARIES                    | Set of [caching varies](./04-caching/concepts/02-varies.mdx) headers and/or cookies to identifier cached query results.                              | ""                                                                                         |
+| GBOX_CACHING_TYPE_KEYS                 | [Caching type keys](./04-caching/concepts/03-type-keys.mdx) use to identifier query results items.                                                   | If not specific key field for type, by default "id" will be use as key field for all types |
+| GBOX_AUTO_INVALIDATE_CACHE             | Whether [auto invalidate query results](/04-caching/03-auto-invalidate-cache.mdx) by mutation results through type keys or not.                      | "true"                                                                                     |
 | GBOX_CACHING_DEBUG_HEADERS             | Whether add cache debug headers to every responses like tags, cache key or not.                                                                      | "true"                                                                                     |
 | GBOX_ENABLED_ADMIN_AUTH                | Whether enabled basic auth for admin endpoint.                                                                                                       | "false"                                                                                    |
 | GBOX_ADMIN_USERNAME                    | Admin basic auth username. This option only affect when `GBOX_ENABLED_ADMIN_AUTH` set to "true".                                                     | "gbox"                                                                                     |
@@ -44,9 +45,9 @@ GBox is a custom build of the Caddy web server including the `http.handlers.gbox
 
 Read [Caddy web server's getting started guide](https://caddyserver.com/docs/getting-started) to learn the basics.
 
-## Caddy global options {#caddy-global-options}
+### Global options {#caddy-global-options}
 
-You can add [Caddy global options](https://caddyserver.com/docs/caddyfile/options) through `GBOX_GLOBAL_DIRECTIVES` environment variable.
+You can add [Caddy global options](https://caddyserver.com/docs/caddyfile/options) via `GBOX_GLOBAL_DIRECTIVES` environment variable.
 
 Example:
 
@@ -56,12 +57,25 @@ GBOX_GLOBAL_DIRECTIVES: |
   admin off
 ```
 
-## GBox extra directives {#caddy-extra-directives}
+### GBox extra directives {#caddy-extra-directives}
 
-You can add more GBox directives through `GBOX_EXTRA_DIRECTIVES` environment variable, some useful directives you may want to add:
+You can add more GBox directives via `GBOX_EXTRA_DIRECTIVES` environment variable, some useful directives below you may want to add.
 
 | Directive            | Description                                                           | Example                                                |
 |----------------------|-----------------------------------------------------------------------|--------------------------------------------------------|
 | fetch_schema_header  | Help to add HTTP header when fetch schema through introspection query | fetch_schema_header header_name value                  |
 | cors_origins         | A list of allowed CORS origins                                        | cors_origins https://example1.org https://example2.org |
 | cors_allowed_headers | A list of allowed CORS HTTP headers                                   | cors_allowed_headers Authorization Cache-Control       |
+
+Example:
+
+```yaml
+GBOX_EXTRA_DIRECTIVES: |
+  cors_origins *
+  fetch_schema_header Authorization "Bearer xyz"
+  cors_allowed_headers Authorization Cache-Control
+```
+
+:::info
+Header name is case-insensitive.
+:::

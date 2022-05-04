@@ -1,0 +1,41 @@
+---
+id: caching-auto-invalidate-cache
+title: Auto invalidate cache
+sidebar_label: Auto invalidate cache
+image: https://gbox-proxy.github.io/img/gbox-full.png
+slug: /caching/auto-invalidate-cache
+---
+
+It's a powerful feature help to purge cached query results through mutation operations responses.
+
+For example, imagine this GraphQL schema:
+
+```graphql
+type Book {
+  id: ID!
+  title: String!
+}
+
+type Mutation {
+  updateBook: Book!
+}
+```
+
+and the following mutation query:
+
+```graphql
+mutation {
+  updateBook {
+    id
+  }
+}
+```
+
+Once the mutation completes, any cached query results that contain the `Book` with the returned ID will be invalidated.
+
+:::note
+Auto invalidate cache feature **does not** automatically invalidate data is when items are added to a list,
+you can use admin API to [purge via specific type](./02-admin-api.mdx#api-purge-via-specific-type).
+:::
+
+This feature enabled by default. If you want to disable it, set value of `GBOX_AUTO_INVALIDATE_CACHE` environment variable to `false`.
