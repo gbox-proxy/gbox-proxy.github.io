@@ -1,0 +1,107 @@
+---
+id: caching-admin-api
+title: Admin API
+sidebar_label: Admin API
+image: https://gbox-proxy.github.io/img/gbox-full.png
+slug: /caching/admin-api
+---
+
+The GBox provides a custom admin GraphQL API (a.k.a.Purging cache API), allows you to invalidate cached data.
+
+Admin Endpoints
+---------------
+
++ GraphQL playground available at path `/admin`
++ GraphQL API available at path `/admin/graphql`
+
+Authentication
+--------------
+
+Everyone can access the admin GraphQL API, but you can enable basic auth for it. To enable basic auth you must set value of `GBOX_ENABLED_ADMIN_AUTH` environment variable to `true`.
+
+Default basic auth username's `gbox` and password's `gbox` too, you can change them via `GBOX_ADMIN_USERNAME` and `GBOX_ADMIN_PASSWORD` envs, the password must be base64 encrypted with `bcrypt` algorithm.
+
+:::tip
+You can use [gbox hash-password](https://caddyserver.com/docs/command-line#caddy-hash-password) cmd to generate the admin password.
+:::
+
+Purging cached data
+-------------------
+
+Now you could try to use admin GraphQL api to purge cached data.
+
+### Purge via an operation name
+
+With this mutation, you can purge all cached results of the query with the operation name you provide.
+
+```graphql
+type Mutation {
+    purgeOperation(name: String!): Boolean!
+}
+```
+
+For example, to invalidate all results of queries named `getUsers`.
+
+```graphql
+mutation {
+    purgeOperation(name: "getUsers")
+}
+```
+
+### Purge via specific type
+
+With this mutation, you can purge all cached results contain fields have specific type given.
+
+```graphql
+type Mutation {
+    purgeType(type: String!): Boolean!
+}
+```
+
+For example, to invalidate all results contain fields have `User` type.
+
+```graphql
+mutation {
+    purgeType(type: "User")
+}
+```
+
+### Purge via query root field
+
+With this mutation, you can purge all cached results contain query root field given.
+
+```graphql
+type Mutation {
+    purgeQueryRootField(field: String!): Boolean!
+}
+```
+
+For example, to invalidate all results contain query root field `users`.
+
+```graphql
+mutation {
+    purgeQueryRootField(field: "users")
+}
+```
+
+### Purge via type key
+
+If you want to purge an arbitrary type, limited by specific type key you can pass in as an argument.
+
+```graphql
+type Mutation {
+    purgeTypeKey(
+        type: String!
+        field: String!
+        key: String!
+    ): Boolean
+}
+```
+
+For example to either purge all cached query results have `User` type identified by the key field `email` with value `email@example.org` run the following mutations:
+
+```graphql
+mutation {
+  purgeTypeKey(type: "User", field: "email", key: "email@example.org")
+}
+```
