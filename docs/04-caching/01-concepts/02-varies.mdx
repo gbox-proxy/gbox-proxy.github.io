@@ -1,9 +1,9 @@
 ---
-id: caching-varies
+id: caching-concepts-varies
 title: Varies
 sidebar_label: Varies
 image: https://gbox-proxy.github.io/img/gbox-full.png
-slug: /caching/varies
+slug: /caching/concepts/varies
 ---
 
 Some types and fields can contain data that is specific to a certain user. Cached query results that contain those types (or fields) should not be returned to any other user.
@@ -40,7 +40,7 @@ Header names are case-insensitive, cookie names are case-sensitive.
 Using varies
 ------------
 
-To set varies a certain query result should be cached by, create a cache rule for the types you want to cache separately per-user (see Cache [Rules](./02-rules.mdx) for more information):
+To set varies a certain query result should be cached by, create a cache rule for the types you want to cache separately per-user (see cache [Rules](./01-rules.mdx) for more information):
 
 ```yaml
 GBOX_CACHING_RULES: |
