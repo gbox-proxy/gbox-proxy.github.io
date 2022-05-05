@@ -62,7 +62,7 @@ const config = {
           "src": "img/gbox-full.png",
           "href": "/",
         },
-        copyright: `Copyright © ${new Date().getFullYear()} GBox Proxy. Built with Docusaurus.`,
+        copyright: `Copyright © ${new Date().getFullYear()} GBox Proxy.`,
       },
       prism: {
         theme: lightCodeTheme,

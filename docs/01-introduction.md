@@ -1,5 +1,6 @@
 ---
 id: introduction
+title: Introduction
 hide_title: true
 sidebar_label: Introduction
 image: https://gbox-proxy.github.io/img/gbox-full.png
