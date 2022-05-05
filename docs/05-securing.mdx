@@ -17,8 +17,7 @@ To avoid this, you could disable GraphQL introspection via `GBOX_DISABLED_INTROS
 Query complexity
 ----------------
 
-Set of GraphQL query filters max depths, node count limit, and max complexity.
-This feature enabled by default, if you want to disable it, set `GBOX_ENABLED_COMPLEXITY` to `false`.
+Set of GraphQL query filters by depths, nodes count, and max complexity. All filters are enabled by default, if you want to disable it, set `GBOX_ENABLED_COMPLEXITY` to `false`.
 
 ### Max query depths
 
@@ -54,7 +53,7 @@ You can see various queries as examples and their depths here:
   }
 ```
 
-By default, query max depth's `15`, if you want to increase or decrease, set `GBOX_MAX_DEPTH` environment variable.
+By default, query max depth's `15`, if you want to increase or decrease, try to set `GBOX_MAX_DEPTH` environment variable, set to `0` to disable query max depths filter.
 
 ### Node count limit
 
@@ -79,7 +78,7 @@ query {
 }
 ```
 
-By default, node count limit's `60`, if you want to increase or decrease, set `GBOX_NODE_COUNT_LIMIT` environment variable.
+By default, node count limit's `60`, if you want to increase or decrease, try to set `GBOX_NODE_COUNT_LIMIT` environment variable, set to `0` to disable node count limit filter.
 
 ### Max query complexity
 
@@ -102,5 +101,5 @@ query {
 }
 ```
 
-By default, max complexity of query are `60`, if you want to increase or decrease, set `GBOX_MAX_COMPLEXITY` environment variable.
+By default, max complexity of query are `60`, if you want to increase or decrease, try to set `GBOX_MAX_COMPLEXITY` environment variable, set to `0` to disable query complexity filter.
 
