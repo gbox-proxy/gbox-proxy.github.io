@@ -31,16 +31,16 @@ A rule applies to all queries that contain the rule's types or fields. If multip
 Caddy caching rule directives
 -----------------------------
 
-+ [types](#caddy-directive-types): **required**
 + [max_age](#caddy-directive-max-age): **required**
++ [types](#caddy-directive-types): optional
 + [swr](#caddy-directive-swr): optional
 + [varies](#caddy-directive-varies): optional
 
 ### types {#caddy-directive-types}
 
-The rule will apply its cache configuration to any query that contains the types or fields mentioned in the types property.
+The rule will apply its cache configuration to any query that contains the types or fields mentioned in the types directive.
 
-You can target both types as well as specific fields of types:
+You can target both types and specific fields of types:
 
 ```text
 types {
@@ -53,6 +53,8 @@ types {
 
 ```
 
+If not set, the rule will apply for all types.
+
 ### max_age {#caddy-directive-max-age}
 
 The `max_age` directive configures how long query results that match the rule types should be cached, in seconds. If multiple rules apply to the same query, the minimum `max_age` will be used for the entire query result.
@@ -64,3 +66,5 @@ The `swr` [stale-while-revalidate](https://web.dev/stale-while-revalidate/) dire
 ### varies {#caddy-directive-varies}
 
 Which `varies` to apply to query results that match the rule types. See [the documentation](./02-varies.mdx) of it for more information.
+
+If not set, the rule will apply for all users (all users will get the same cached query results).
