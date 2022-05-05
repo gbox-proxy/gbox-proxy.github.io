@@ -1,0 +1,18 @@
+---
+id: limitations
+title: Limitations
+sidebar_label: Limitations
+image: https://gbox-proxy.github.io/img/gbox-full.png
+slug: /limitations
+---
+
+Currently, the GBox have some limitations below.
+
+Upstream
+--------
+
++ **Must** support GraphQL requests over HTTP `POST` method.
++ **Must** accept GBox request an [introspection query](https://spec.graphql.org/June2018/#sec-Introspection) to known upstream schema.
++ Only support GraphQL subscription by the following transports:
+  - [graphql-ws](https://github.com/enisdenjo/graphql-ws)
+  - [subscriptions-transport-ws](https://github.com/apollographql/subscriptions-transport-ws)
