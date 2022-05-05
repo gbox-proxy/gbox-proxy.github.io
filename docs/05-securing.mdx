@@ -1,0 +1,106 @@
+---
+id: securing
+title: Securing
+sidebar_label: Securing
+image: https://gbox-proxy.github.io/img/gbox-full.png
+slug: /securing
+---
+
+The GBox offers you some security features to prevent common attacks malicious to GraphQL APIs.
+
+Disable introspection queries
+-----------------------------
+
+Gives full information about the schema and may not be desired in production.
+To avoid this, you could disable GraphQL introspection via `GBOX_DISABLED_INTROSPECTION` environment variable, set value of it to `true` to disable.
+
+Query complexity
+----------------
+
+Set of GraphQL query filters max depths, node count limit, and max complexity.
+This feature enabled by default, if you want to disable it, set `GBOX_ENABLED_COMPLEXITY` to `false`.
+
+### Max query depths
+
+Restricts a GraphQL operation based on its depth, preventing deeply nested queries.
+
+:::note
+GraphQL introspection queries are included from depth limits.
+:::
+
+You can see various queries as examples and their depths here:
+
+```graphql
+  # depth = 1
+  query deep1 {
+    dummy # root field have type's scalar.
+  }
+
+  # depth = 2
+  query deep2 {
+    books { # root field have type's list or object.
+      title
+    }
+  }
+
+  # depth = 3
+  query deep3 {
+    books { # root field have type's object list or object.
+      title
+      author { # subfield have type's list or object.
+         name
+      }
+    }
+  }
+```
+
+By default, query max depth's `15`, if you want to increase or decrease, set `GBOX_MAX_DEPTH` environment variable.
+
+### Node count limit
+
+Restricts a GraphQL operation based on the number of nodes query may return. This helps in limiting the number of different pieces of related data to be fetched.
+
+A node is defined as a field with a selection set.
+
+For example, in the query below, the number of nodes is 3, and they are books, author and users.
+
+```graphql
+query {
+  books {
+    title
+    author {
+      name
+    }
+  }
+  users {
+    id
+    name
+  }
+}
+```
+
+By default, node count limit's `60`, if you want to increase or decrease, set `GBOX_NODE_COUNT_LIMIT` environment variable.
+
+### Max query complexity
+
+Restricts a GraphQL operation based on the number of nodes that might be needed to execute the query. This helps in limiting the number of different pieces of related data to be fetched.
+
+For example, in the query below, the complexity is 3.
+
+```graphql
+query {
+  books {
+    title
+    author {
+      name
+    }
+  }
+  users {
+    id
+    name
+  }
+}
+```
+
+By default, max complexity of query are `60`, if you want to increase or decrease, set `GBOX_MAX_COMPLEXITY` environment variable.
+
