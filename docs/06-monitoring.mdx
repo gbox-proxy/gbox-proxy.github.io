@@ -42,10 +42,10 @@ A counter of GraphQL query operations made.
 
 ### caddy_http_gbox_operation_duration
 
-The buckets are currently not configurable. For durations, the default ([prometheus.DefBuckets](https://pkg.go.dev/github.com/prometheus/client_golang/prometheus#pkg-variables)
-set of buckets is used (5ms, 10ms, 25ms, 50ms, 100ms, 250ms, 500ms, 1s, 2.5s, 5s, and 10s). For sizes, the buckets are 256b, 1kiB, 4kiB, 16kiB, 64kiB, 256kiB, 1MiB, and 4MiB.
-
 A histogram of the GraphQL query operations durations.
+
+The buckets are currently not configurable. The default [prometheus.DefBuckets](https://pkg.go.dev/github.com/prometheus/client_golang/prometheus#pkg-variables)
+set of buckets is used (5ms, 10ms, 25ms, 50ms, 100ms, 250ms, 500ms, 1s, 2.5s, 5s, and 10s).
 
 | Label          | Description                                                |
 |----------------|------------------------------------------------------------|
