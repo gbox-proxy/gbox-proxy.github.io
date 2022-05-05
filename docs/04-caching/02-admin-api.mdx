@@ -17,7 +17,7 @@ Admin Endpoints
 Authentication
 --------------
 
-Everyone can access the admin GraphQL API, but you can enable basic auth for it. To enable basic auth you must set value of `GBOX_ENABLED_ADMIN_AUTH` environment variable to `true`.
+Anyone can access the admin GraphQL API by default, but you can enable basic auth for it. To enable basic auth you must set value of `GBOX_ENABLED_ADMIN_AUTH` environment variable to `true`.
 
 Default basic auth username's `gbox` and password's `gbox` too, you can change them via `GBOX_ADMIN_USERNAME` and `GBOX_ADMIN_PASSWORD` envs, the password must be base64 encrypted with `bcrypt` algorithm.
 
