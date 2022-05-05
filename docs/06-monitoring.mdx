@@ -1,0 +1,62 @@
+---
+id: monitoring
+title: Monitoring
+sidebar_label: Monitoring
+image: https://gbox-proxy.github.io/img/gbox-full.png
+slug: /monitoring
+---
+
+[Prometheus](https://prometheus.io) is a monitoring platform that collects metrics from monitored targets by scraping metrics HTTP endpoints on these targets.
+As well as helping you to display metrics with a dashboard tool like [Grafana](https://grafana.io), Prometheus is also used for [alerting](https://prometheus.io/docs/alerting/latest/overview/).
+
+The GBox emit metrics help you to monitor GraphQL operation durations, total operation in flight and caching statues. In additional, GBox is a custom build of [the Caddy web server](https://caddyserver.com) including the `http.handlers.gbox` module,
+so it has all [Caddy metrics](https://caddyserver.com/docs/metrics#caddys-metrics).
+
+Enable metrics endpoint
+-----------------------
+
+Metrics endpoint disabled by default, to enable it, you need to set `GBOX_ENABLED_METRICS` environment variable to `true`.
+
+By default, metrics endpoint's `/metrics`, if you want to change it, try to set `GBOX_METRICS_PATH` environment variable.
+
+GBox metrics
+------------
+
+### caddy_http_gbox_operations_in_flight
+
+A gauge of the number of operations currently being handled by this server.
+
+| Label          | Description                                                |
+|----------------|------------------------------------------------------------|
+| operation_name | GraphQL query operation name                               |
+| operation_type | GraphQL query operation type (query/mutation/subscription) |
+
+### caddy_http_gbox_operation_total
+
+A counter of GraphQL query operations made.
+
+| Label          | Description                                                |
+|----------------|------------------------------------------------------------|
+| operation_name | GraphQL query operation name                               |
+| operation_type | GraphQL query operation type (query/mutation/subscription) |
+
+### caddy_http_gbox_operation_duration
+
+The buckets are currently not configurable. For durations, the default ([prometheus.DefBuckets](https://pkg.go.dev/github.com/prometheus/client_golang/prometheus#pkg-variables)
+set of buckets is used (5ms, 10ms, 25ms, 50ms, 100ms, 250ms, 500ms, 1s, 2.5s, 5s, and 10s). For sizes, the buckets are 256b, 1kiB, 4kiB, 16kiB, 64kiB, 256kiB, 1MiB, and 4MiB.
+
+A histogram of the GraphQL query operations durations.
+
+| Label          | Description                                                |
+|----------------|------------------------------------------------------------|
+| operation_name | GraphQL query operation name                               |
+| operation_type | GraphQL query operation type (query/mutation/subscription) |
+
+### caddy_http_gbox_caching_total
+
+A counter of GraphQL query operations caching statues.
+
+| Label          | Description                                                 |
+|----------------|-------------------------------------------------------------|
+| operation_name | GraphQL query operation name                                |
+| status         | Cache statuses of GraphQL query operations  (HIT/MISS/PASS) |
